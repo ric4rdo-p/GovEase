@@ -1,0 +1,38 @@
+{
+    "manifest_version": 3,
+    "name": "GovEase",
+    "version": "1.0.0",
+    "description": "An AI assistant that helps elderly users navigate and fill out government forms with ease.",
+    "action": {
+        "default_popup": "index.html"
+    },
+    "permissions": [
+        "activeTab",
+        "scripting",
+        "storage"
+    ],
+    "host_permissions": [
+        "https://www.ssa.gov/*",
+        "https://www.irs.gov/*",
+        "https://www.medicare.gov/*",
+        "https://www.benefits.gov/*",
+        "https://*.gov/*"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://www.ssa.gov/*",
+                "https://www.irs.gov/*",
+                "https://www.medicare.gov/*",
+                "https://www.benefits.gov/*",
+                "https://*.gov/*"
+            ],
+            "js": [
+                "content.js"
+            ]
+        }
+    ]
+}
