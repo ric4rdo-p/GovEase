@@ -1,0 +1,1 @@
+// Runs only while the popup is open.
