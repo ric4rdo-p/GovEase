@@ -68,7 +68,7 @@ GovEase is a Chrome extension that helps elderly users navigate and fill out com
 ## Development
 
 ### Loading in Development
-1. Load the `dist` folder as an unpacked extension in Chrome
+1. Load the `GovEase` folder as an unpacked extension in Chrome
 2. Make changes and rebuild to see updates
 
 ## Future Enhancements
