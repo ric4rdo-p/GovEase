@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentAudio = null;
         }
         isPlaying = false;
-        playTtsButton.textContent = 'Play';
+        playTtsButton.innerHTML = "<img src='volume.png' width='25px'></img>";
         playTtsButton.title = 'Read aloud';
         playTtsButton.disabled = false;
     }
@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentAudio = new Audio(audioUrl);
                 isPlaying = true;
 
-                playTtsButton.textContent = 'Pause';
+                playTtsButton.innerHTML = "<img src='pause.png' width='25px'></img>";
                 playTtsButton.title = 'Pause reading';
                 playTtsButton.disabled = false;
 

@@ -3,7 +3,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const { text } = request;
 
         // Your hardcoded Gemini API key - replace with your actual API key
-        const API_KEY = 'GEMINI_API_KEY'; // Replace this with your actual API key
+        const API_KEY = 'AIzaSyB_RzINcmhw4VthB_9D2kc80FV5_UFAEts'; // Replace this with your actual API key
 
         // Your hardcoded ElevenLabs API key - replace with your actual API key
         //const ELEVENLABS_API_KEY = 'sk_4afacedf936105b6b53193009ea0c51832fb268985b9ed1a'; // Replace this with your actual ElevenLabs API key
