@@ -1,3 +1,28 @@
-<!-- The little UI that opens when you click the toolbar icon. 
-Holds your button(s) and a <div id="result"> (or similar) where you show the summary.
--->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Webpage Summarizer</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            width: 300px;
+        }
+
+        #summary {
+            margin-top: 10px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Webpage Summarizer</h1>
+    <input type="password" id="apiKey" placeholder="Enter your Gemini API Key">
+    <button id="saveKey">Save Key</button>
+    <button id="summarize">Summarize</button>
+    <div id="summary"></div>
+    <script src="popup.js"></script>
+</body>
+
+</html>
