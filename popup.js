@@ -7,8 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const playTtsButton = document.getElementById('playTts');
 
     let currentSummary = '';
-    let speechSynthesis = window.speechSynthesis;
-    let currentUtterance = null;
+    let currentAudio = null;
     let isPlaying = false;
 
     // Utility functions
@@ -60,54 +59,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!text) return;
 
-        // Stop any current speech
-        if (speechSynthesis.speaking) {
-            speechSynthesis.cancel();
-        }
+        // Show loading state for TTS
+        playTtsButton.textContent = 'Loading...';
+        playTtsButton.disabled = true;
 
-        // Create utterance with the summary text
-        currentUtterance = new SpeechSynthesisUtterance(text);
-        currentUtterance.rate = 0.9;
-        currentUtterance.pitch = 1;
-        currentUtterance.volume = 1;
+        // Prepare text for ElevenLabs
+        const fullText = `Here is a summary of the webpage content: ${text}`;
 
-        // Try to use a more natural voice
-        const voices = speechSynthesis.getVoices();
-        const preferredVoice = voices.find(voice =>
-            voice.name.includes('Google') ||
-            voice.name.includes('Microsoft') ||
-            voice.lang.startsWith('en')
-        );
-        if (preferredVoice) {
-            currentUtterance.voice = preferredVoice;
-        }
-
-        currentUtterance.onstart = () => {
-            isPlaying = true;
-            playTtsButton.textContent = 'Pause';
-            playTtsButton.title = 'Pause reading';
-        };
-
-        currentUtterance.onend = () => {
-            stopSpeaking();
-        };
-
-        currentUtterance.onerror = () => {
-            stopSpeaking();
-            showStatus('Speech synthesis error', 'error');
-        };
-
-        speechSynthesis.speak(currentUtterance);
-        showStatus('Reading summary...', 'success');
+        // Send request to background script for ElevenLabs TTS
+        chrome.runtime.sendMessage({
+            type: 'elevenLabsTTS',
+            text: fullText
+        });
     }
 
     function stopSpeaking() {
-        if (speechSynthesis.speaking) {
-            speechSynthesis.cancel();
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio = null;
         }
         isPlaying = false;
         playTtsButton.textContent = 'Play';
         playTtsButton.title = 'Read aloud';
+        playTtsButton.disabled = false;
     }
 
     // Initialize the extension
@@ -161,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Listen for summary from background script
+    // Listen for messages from background script
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if (request.type === 'summary') {
             hideLoading();
@@ -179,7 +153,53 @@ document.addEventListener('DOMContentLoaded', () => {
             stopSpeaking();
 
             showStatus('Summary generated successfully!', 'success');
+        } else if (request.type === 'elevenLabsAudio') {
+            try {
+                // Convert the plain JS array back into a typed array
+                const audioBytes = new Uint8Array(request.audioData);
+                const audioBlob = new Blob([audioBytes], { type: 'audio/mpeg' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+
+                // Stop any current audio
+                if (currentAudio) {
+                    currentAudio.pause();
+                    URL.revokeObjectURL(currentAudio.src);
+                }
+
+                // Create and play new audio
+                currentAudio = new Audio(audioUrl);
+                isPlaying = true;
+
+                playTtsButton.textContent = 'Pause';
+                playTtsButton.title = 'Pause reading';
+                playTtsButton.disabled = false;
+
+                currentAudio.play()
+                    .then(() => showStatus('Playing audio...', 'success'))
+                    .catch(err => {
+                        console.error('Audio playback failed:', err);
+                        showStatus('Audio playback failed', 'error');
+                        stopSpeaking();
+                    });
+
+                currentAudio.onended = () => {
+                    stopSpeaking();
+                    URL.revokeObjectURL(audioUrl);
+                };
+
+                currentAudio.onerror = (err) => {
+                    console.error('Audio error:', err);
+                    stopSpeaking();
+                    showStatus('Error playing audio', 'error');
+                    URL.revokeObjectURL(audioUrl);
+                };
+            } catch (err) {
+                console.error('Audio processing error:', err);
+                showStatus('Invalid audio data', 'error');
+                stopSpeaking();
+            }
         }
+
     });
 
     // Handle page visibility changes to stop speech when popup is closed
@@ -195,11 +215,4 @@ document.addEventListener('DOMContentLoaded', () => {
             stopSpeaking();
         }
     });
-
-    // Load voices when they become available
-    if (speechSynthesis.onvoiceschanged !== undefined) {
-        speechSynthesis.onvoiceschanged = () => {
-            // Voices loaded
-        };
-    }
 });

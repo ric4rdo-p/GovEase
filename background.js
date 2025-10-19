@@ -3,7 +3,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const { text } = request;
 
         // Your hardcoded Gemini API key - replace with your actual API key
-        const API_KEY = 'API_KEY_HERE'; // Replace this with your actual API key
+        const API_KEY = 'GEMINI_API_KEY_HERE'; // Replace this with your actual API key
+
+        // Your hardcoded ElevenLabs API key - replace with your actual API key
+        //const ELEVENLABS_API_KEY = 'sk_4afacedf936105b6b53193009ea0c51832fb268985b9ed1a'; // Replace this with your actual ElevenLabs API key
 
         const model = 'gemini-2.5-flash'; // Using the latest flash model
         const url = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${API_KEY}`;
@@ -44,6 +47,54 @@ Format your response as bullet points using • symbol. Focus on the key points 
             .catch(error => {
                 console.error('Error:', error);
                 chrome.runtime.sendMessage({ type: 'summary', summary: `Error: ${error.message}` });
+            });
+    } else if (request.type === 'elevenLabsTTS') {
+        const { text } = request;
+
+        // Your hardcoded ElevenLabs API key - replace with your actual API key
+        const ELEVENLABS_API_KEY = 'ELEVENLABS_API_KEY_HERE'; // Replace this with your actual ElevenLabs API key
+
+        const voiceId = 'CwhRBWXzGAHq8TQ4Fs17';
+        const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`;
+
+        const data = {
+            text: text,
+            model_id: 'eleven_turbo_v2', // or 'eleven_multilingual_v2', etc.
+            voice_settings: {
+                stability: 0.5,
+                similarity_boost: 0.5
+            }
+        };
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'audio/mpeg',
+                'Content-Type': 'application/json',
+                'xi-api-key': ELEVENLABS_API_KEY
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`ElevenLabs API error: ${response.status} ${response.statusText}`);
+                }
+                return response.arrayBuffer();
+            })
+            .then(audioData => {
+                // Convert ArrayBuffer to Uint8Array for sending to popup
+                const audioBytes = new Uint8Array(audioData);
+                chrome.runtime.sendMessage({
+                    type: 'elevenLabsAudio',
+                    audioData: Array.from(audioBytes)
+                });
+            })
+            .catch(error => {
+                console.error('ElevenLabs TTS Error:', error);
+                chrome.runtime.sendMessage({
+                    type: 'elevenLabsError',
+                    error: error.message || 'ElevenLabs TTS failed'
+                });
             });
     }
 });
