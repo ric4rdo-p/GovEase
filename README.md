@@ -37,15 +37,12 @@ GovEase is a Chrome extension that helps elderly users navigate and fill out com
 
 ### 1. Set Up Your Profile
 - Click the GovEase icon in your Chrome toolbar
-- Go to the "👤 Profile" tab
+- Go to the "Autofill" tab
 - Fill in your personal information (this stays private on your device)
-- Adjust your preferences (voice, text size, contrast)
-- Click "💾 Save Profile"
+- Click "Save" 
 
 ### 2. Use on Government Websites
 - Visit any government website (e.g., ssa.gov, irs.gov)
-- Look for the green form badges that appear on forms
-- Click a form badge to open the AI assistant panel
 - Use the buttons to:
   - ✨ Auto-fill with your saved information
   - 🔊 Read form instructions aloud
