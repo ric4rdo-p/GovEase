@@ -2,20 +2,16 @@
 
 **Your AI companion for government forms**
 
-GovEase is a Chrome extension designed to help elderly users navigate and fill out government forms with ease. It provides AI-powered assistance, voice guidance, and accessibility features to make government websites more user-friendly for seniors.
+GovEase is a Chrome extension that helps elderly users navigate and fill out complex government forms with AI-powered summaries, text to speech voice guidance, and smart autofill.
+
 
 ## Features
 
 ### 🤖 AI Form Assistant
-- **Automatic Form Detection**: Identifies government forms on websites
 - **Smart Auto-Fill**: Uses your saved profile information to fill forms automatically
-- **Progress Tracking**: Shows completion status of forms
-- **Difficulty Assessment**: Rates forms by complexity (Low/Medium/High)
 
 ### 🔊 Voice Guidance
 - **Text-to-Speech**: Reads form instructions and field descriptions aloud
-- **Audio Feedback**: Confirms actions and provides helpful announcements
-- **Adjustable Speed**: Slower speech rate optimized for elderly users
 
 ### 👤 User Profile System
 - **Secure Storage**: Personal information stored locally on your device
@@ -23,21 +19,18 @@ GovEase is a Chrome extension designed to help elderly users navigate and fill o
 - **Privacy Focused**: Information never leaves your device
 
 ### ♿ Accessibility Features
-- **Large Text Mode**: Increases font size for better readability
-- **High Contrast Mode**: Enhanced visibility for low vision users
 - **Voice Assistance**: Audio guidance for users with visual impairments
-- **Field Help**: Hover over fields to hear explanations
 
 ## Installation
 
 1. **Download the Extension**
    - Clone or download this repository
-   - Navigate to the `gov-ease/dist` folder
+   - Navigate to the `govEase` folder
 
 2. **Load in Chrome**
    - Open Chrome and go to `chrome://extensions/`
    - Enable "Developer mode" (toggle in top right)
-   - Click "Load unpacked" and select the `gov-ease/dist` folder
+   - Click "Load unpacked" and select the `govEase` folder
    - The GovEase icon should appear in your Chrome toolbar
 
 ## How to Use
@@ -58,19 +51,6 @@ GovEase is a Chrome extension designed to help elderly users navigate and fill o
   - 🔊 Read form instructions aloud
   - ❓ Get help with individual fields
 
-### 3. Voice Commands
-- The extension will automatically read form information when you click buttons
-- Hover over form fields to hear field descriptions
-- Voice guidance can be toggled on/off in your profile settings
-
-## Supported Websites
-
-Currently optimized for:
-- Social Security Administration (ssa.gov)
-- IRS.gov
-- Medicare.gov
-- Other government websites with standard forms
-
 ## Privacy & Security
 
 - **Local Storage**: All personal information is stored on your device only
@@ -80,31 +60,16 @@ Currently optimized for:
 
 ## Technical Details
 
-### Architecture
-- **Chrome Extension**: Manifest v3 compliant
-- **React Frontend**: Modern, accessible UI
-- **Content Scripts**: Injected into government websites
-- **Background Service**: Handles extension lifecycle and messaging
-
 ### Technologies
-- React 19
-- Vite build system
 - Chrome Extension APIs
-- Web Speech API for text-to-speech
-- Chrome Storage API for data persistence
+- Gemini API for dynamic summarization
+- ElevenLabs API for text-to-speech
 
 ## Development
 
-### Building from Source
-```bash
-npm install
-npm run build
-```
-
 ### Loading in Development
-1. Build the project: `npm run build`
-2. Load the `dist` folder as an unpacked extension in Chrome
-3. Make changes and rebuild to see updates
+1. Load the `dist` folder as an unpacked extension in Chrome
+2. Make changes and rebuild to see updates
 
 ## Future Enhancements
 
@@ -114,15 +79,8 @@ npm run build
 - [ ] Form completion reminders
 - [ ] Integration with calendar systems
 - [ ] Multi-language support
+- [ ] Voice Commands
 
 ## Contributing
 
 This project was built for HackTX with the goal of helping elderly users navigate government websites more easily. Contributions and suggestions are welcome!
-
-## License
-
-MIT License - feel free to use and modify for your own projects.
-
----
-
-**Made with ❤️ for elderly users who need help with government forms**
