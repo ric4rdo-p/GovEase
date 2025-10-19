@@ -1,8 +1,12 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type === 'summarize') {
-        const { text, apiKey } = request;
+        const { text } = request;
+
+        // Your hardcoded Gemini API key - replace with your actual API key
+        const API_KEY = 'API_KEY_HERE'; // Replace this with your actual API key
+
         const model = 'gemini-2.5-flash'; // Using the latest flash model
-        const url = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`;
+        const url = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${API_KEY}`;
 
         const data = {
             contents: [{
@@ -11,7 +15,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 ${text}
 
-Format your response as bullet points using • symbol. Focus on the key points and main ideas.`
+Format your response as bullet points using • symbol. Focus on the key points and main ideas. Do not add any type of markdown in the response, just plain text.`
                 }]
             }]
         };

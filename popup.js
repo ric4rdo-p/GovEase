@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const apiKeyInput = document.getElementById('apiKey');
-    const saveKeyButton = document.getElementById('saveKey');
     const summarizeButton = document.getElementById('summarize');
     const summaryDiv = document.getElementById('summary');
     const summaryContainer = document.getElementById('summaryContainer');
@@ -86,8 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentUtterance.onstart = () => {
             isPlaying = true;
-            playTtsButton.textContent = '⏸️';
-            playTtsButton.title = '⏸️ Pause reading';
+            playTtsButton.textContent = 'Pause';
+            playTtsButton.title = 'Pause reading';
         };
 
         currentUtterance.onend = () => {
@@ -100,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         speechSynthesis.speak(currentUtterance);
-        showStatus('🔊 Reading summary...', 'success');
+        showStatus('Reading summary...', 'success');
     }
 
     function stopSpeaking() {
@@ -108,37 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
             speechSynthesis.cancel();
         }
         isPlaying = false;
-        playTtsButton.textContent = '▶️';
-        playTtsButton.title = '🔊 Read aloud';
+        playTtsButton.textContent = 'Play';
+        playTtsButton.title = 'Read aloud';
     }
 
-    // Load API key from storage
-    chrome.storage.sync.get(['geminiApiKey'], (result) => {
-        if (result.geminiApiKey) {
-            apiKeyInput.value = result.geminiApiKey;
-            showStatus('✅ API Key loaded successfully', 'success');
-        }
-    });
-
-    // Save API key to storage
-    saveKeyButton.addEventListener('click', () => {
-        const apiKey = apiKeyInput.value.trim();
-        if (apiKey) {
-            chrome.storage.sync.set({ 'geminiApiKey': apiKey }, () => {
-                showStatus('✅ API Key saved successfully!', 'success');
-                saveKeyButton.textContent = '✅ Saved';
-                saveKeyButton.style.background = '#48bb78';
-                saveKeyButton.style.color = 'white';
-                setTimeout(() => {
-                    saveKeyButton.textContent = '💾 Save Key';
-                    saveKeyButton.style.background = '';
-                    saveKeyButton.style.color = '';
-                }, 2000);
-            });
-        } else {
-            showStatus('❌ Please enter a valid API Key', 'error');
-        }
-    });
+    // Initialize the extension
+    showStatus('Ready to summarize webpages!', 'success');
 
     // TTS button click handler
     playTtsButton.addEventListener('click', () => {
@@ -149,50 +122,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Summarize button click handler
     summarizeButton.addEventListener('click', () => {
-        // Validate API key
-        chrome.storage.sync.get(['geminiApiKey'], (result) => {
-            if (!result.geminiApiKey) {
-                showStatus('❌ Please save your API Key first', 'error');
-                apiKeyInput.focus();
-                return;
-            }
+        // Show loading state
+        showLoading();
+        summarizeButton.disabled = true;
+        summarizeButton.textContent = 'Processing...';
 
-            // Show loading state
-            showLoading();
-            summarizeButton.disabled = true;
-            summarizeButton.textContent = '⏳ Processing...';
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            const activeTab = tabs[0];
+            chrome.scripting.executeScript({
+                target: { tabId: activeTab.id },
+                function: () => document.body.innerText
+            }, (injectionResults) => {
+                if (chrome.runtime.lastError || !injectionResults || !injectionResults[0]) {
+                    hideLoading();
+                    summaryDiv.textContent = 'Error: Could not access page content. Please try refreshing the page.';
+                    summarizeButton.disabled = false;
+                    summarizeButton.textContent = 'Summarize Page';
+                    showStatus('Failed to access page content', 'error');
+                    return;
+                }
 
-            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                const activeTab = tabs[0];
-                chrome.scripting.executeScript({
-                    target: { tabId: activeTab.id },
-                    function: () => document.body.innerText
-                }, (injectionResults) => {
-                    if (chrome.runtime.lastError || !injectionResults || !injectionResults[0]) {
-                        hideLoading();
-                        summaryDiv.textContent = '❌ Error: Could not access page content. Please try refreshing the page.';
-                        summarizeButton.disabled = false;
-                        summarizeButton.textContent = '📄 Summarize Page';
-                        showStatus('❌ Failed to access page content', 'error');
-                        return;
-                    }
+                const pageText = injectionResults[0].result;
+                if (!pageText || pageText.trim().length < 100) {
+                    hideLoading();
+                    summaryDiv.textContent = 'Error: Page content is too short or empty. Please try a different page.';
+                    summarizeButton.disabled = false;
+                    summarizeButton.textContent = 'Summarize Page';
+                    showStatus('Page content too short', 'error');
+                    return;
+                }
 
-                    const pageText = injectionResults[0].result;
-                    if (!pageText || pageText.trim().length < 100) {
-                        hideLoading();
-                        summaryDiv.textContent = '❌ Error: Page content is too short or empty. Please try a different page.';
-                        summarizeButton.disabled = false;
-                        summarizeButton.textContent = '📄 Summarize Page';
-                        showStatus('❌ Page content too short', 'error');
-                        return;
-                    }
-
-                    // Send to background script
-                    chrome.runtime.sendMessage({
-                        type: 'summarize',
-                        text: pageText,
-                        apiKey: result.geminiApiKey
-                    });
+                // Send to background script (no API key needed)
+                chrome.runtime.sendMessage({
+                    type: 'summarize',
+                    text: pageText
                 });
             });
         });
@@ -210,12 +173,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Reset button state
             summarizeButton.disabled = false;
-            summarizeButton.textContent = '📄 Summarize Page';
+            summarizeButton.textContent = 'Summarize Page';
 
             // Reset TTS button
             stopSpeaking();
 
-            showStatus('✅ Summary generated successfully!', 'success');
+            showStatus('Summary generated successfully!', 'success');
         }
     });
 
