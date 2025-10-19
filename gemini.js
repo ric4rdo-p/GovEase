@@ -1,1 +1,0 @@
-// contains all methods for the api calls for gemini

@@ -7,9 +7,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const data = {
             contents: [{
                 parts: [{
-                    text: `Summarize the following text:
+                    text: `Please provide a concise summary of the following text in bullet point format. Make it easy to understand and keep it brief:
 
-${text}`
+${text}
+
+Format your response as bullet points using • symbol. Focus on the key points and main ideas.`
                 }]
             }]
         };
