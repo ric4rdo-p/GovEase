@@ -3,13 +3,15 @@
 
 <head>
     <title>GovEase - Webpage Summarizer</title>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet">
+    <meta name="viewport" content="width=380, initial-scale=1" />
     <style>
+        /* ====== Your existing celestial theme (trimmed only where unchanged) ====== */
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             width: 380px;
@@ -17,37 +19,34 @@
             margin: 0;
             padding: 0;
             background: #0B0C1A;
-            background-image:
-                radial-gradient(circle at 20% 80%, rgba(245, 230, 179, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(245, 230, 179, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(245, 230, 179, 0.05) 0%, transparent 50%);
             color: #F5E6B3;
             position: relative;
             overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 20% 80%, rgba(245, 230, 179, .1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(245, 230, 179, .08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(245, 230, 179, .05) 0%, transparent 50%);
         }
 
         body::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            inset: 0;
+            pointer-events: none;
             background-image:
                 url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23F5E6B3' fill-opacity='0.03'%3E%3Cpath d='M30 30c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20zm-20-18c9.941 0 18 8.059 18 18s-8.059 18-18 18-18-8.059-18-18 8.059-18 18-18z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             animation: twinkle 800s linear infinite;
-            pointer-events: none;
         }
 
         @keyframes twinkle {
 
             0%,
             100% {
-                opacity: 0.5;
+                opacity: .5
             }
 
             50% {
-                opacity: 0.8;
+                opacity: .8
             }
         }
 
@@ -59,436 +58,334 @@
 
         .header {
             text-align: center;
-            margin-bottom: 25px;
-            color: #F5E6B3;
+            margin-bottom: 10px;
             position: relative;
         }
 
-        .header::before {
-            content: '✦';
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 20px;
-            color: #F5E6B3;
-            opacity: 0.6;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .header::after {
-            content: '✦';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 16px;
-            color: #F5E6B3;
-            opacity: 0.4;
-            animation: float 3s ease-in-out infinite reverse;
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateX(-50%) translateY(0px);
-            }
-
-            50% {
-                transform: translateX(-50%) translateY(-5px);
-            }
-        }
-
         .header h1 {
-            margin: 0 0 8px 0;
-            font-size: 28px;
+            margin: 8px 0 4px;
+            font-size: 24px;
             font-weight: 600;
             font-family: 'Cinzel Decorative', serif;
-            color: #F5E6B3;
-            text-shadow: 0 0 10px rgba(245, 230, 179, 0.3);
+            text-shadow: 0 0 10px rgba(245, 230, 179, .3);
         }
 
         .header p {
             margin: 0;
-            font-size: 14px;
-            opacity: 0.8;
+            font-size: 12px;
+            opacity: .8;
+        }
+
+        /* Top bar with burger */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .burger {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: rgba(11, 12, 26, .6);
+            border: 1px solid #F5E6B3;
             color: #F5E6B3;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .burger:hover {
+            background: rgba(11, 12, 26, .8);
+            transform: translateY(-1px);
+        }
+
+        .burger span,
+        .burger span::before,
+        .burger span::after {
+            display: block;
+            width: 18px;
+            height: 2px;
+            background: #F5E6B3;
+            position: relative;
+            border-radius: 2px;
+        }
+
+        .burger span::before,
+        .burger span::after {
+            content: '';
+            position: absolute;
+            left: 0;
+        }
+
+        .burger span::before {
+            top: -6px;
+        }
+
+        .burger span::after {
+            top: 6px;
+        }
+
+        /* Slide-out drawer */
+        .drawer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 220px;
+            background: rgba(11, 12, 26, .95);
+            border-right: 1px solid #F5E6B3;
+            box-shadow: 0 6px 20px rgba(245, 230, 179, .15);
+            transform: translateX(-100%);
+            transition: transform .25s ease;
+            z-index: 5;
+            padding: 16px 12px;
+            backdrop-filter: blur(8px);
+        }
+
+        .drawer.open {
+            transform: translateX(0);
+        }
+
+        .drawer h2 {
+            margin: 4px 8px 12px;
+            font-size: 16px;
+            font-family: 'Cinzel Decorative', serif;
+        }
+
+        .nav-item {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin: 8px 0;
+            padding: 10px 12px;
+            background: rgba(11, 12, 26, .6);
+            color: #F5E6B3;
+            border: 1px solid rgba(245, 230, 179, .6);
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: rgba(11, 12, 26, .8);
+            border-color: #F5E6B3;
         }
 
         .section {
-            background: rgba(11, 12, 26, 0.8);
+            background: rgba(11, 12, 26, .8);
             border: 1px solid #F5E6B3;
             border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow:
-                0 4px 20px rgba(245, 230, 179, 0.1),
-                inset 0 1px 0 rgba(245, 230, 179, 0.2);
-            position: relative;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 20px rgba(245, 230, 179, .1), inset 0 1px 0 rgba(245, 230, 179, .2);
             backdrop-filter: blur(10px);
-        }
-
-        .section::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #F5E6B3, transparent, #F5E6B3, transparent);
-            border-radius: 18px;
-            z-index: -1;
-            opacity: 0.3;
-            animation: borderGlow 4s ease-in-out infinite;
-        }
-
-        @keyframes borderGlow {
-
-            0%,
-            100% {
-                opacity: 0.3;
-            }
-
-            50% {
-                opacity: 0.6;
-            }
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        .input-group:last-child {
-            margin-bottom: 0;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #F5E6B3;
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
-        }
-
-        input[type="password"] {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #F5E6B3;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            box-sizing: border-box;
-            background: rgba(11, 12, 26, 0.6);
-            color: #F5E6B3;
-            font-family: 'Inter', sans-serif;
-        }
-
-        input[type="password"]:focus {
-            outline: none;
-            border-color: #F5E6B3;
-            box-shadow: 0 0 0 2px rgba(245, 230, 179, 0.3);
-            background: rgba(11, 12, 26, 0.8);
-        }
-
-        input[type="password"]::placeholder {
-            color: rgba(245, 230, 179, 0.6);
         }
 
         .button-group {
             display: flex;
             gap: 10px;
-            margin-top: 15px;
             justify-content: center;
-        }
-
-        button {
-            padding: 12px 20px;
-            border: 1px solid #F5E6B3;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex: 1;
-            font-family: 'Inter', sans-serif;
-            position: relative;
-            overflow: hidden;
         }
 
         .btn-primary {
-            background: rgba(11, 12, 26, 0.8);
+            border-radius: 12px;
+            background: rgba(11, 12, 26, .8);
             color: #F5E6B3;
-            border: 1px solid #F5E6B3;
-            box-shadow: 0 4px 15px rgba(245, 230, 179, 0.2);
+            border: 0;
+            cursor: pointer;
+            transition: .2s;
+            flex: 1;
+            padding: 20px;
         }
 
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(245, 230, 179, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn-primary:hover {
+        .section.hover:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(245, 230, 179, 0.4);
-            border-color: #F5E6B3;
-        }
-
-        .btn-primary:hover::before {
-            left: 100%;
-        }
-
-        .btn-secondary {
-            background: rgba(11, 12, 26, 0.6);
-            color: #F5E6B3;
-            border: 1px solid rgba(245, 230, 179, 0.6);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(11, 12, 26, 0.8);
-            border-color: #F5E6B3;
-            box-shadow: 0 4px 15px rgba(245, 230, 179, 0.2);
-        }
-
-        .btn-icon {
-            padding: 8px;
-            background: rgba(11, 12, 26, 0.6);
-            color: #F5E6B3;
-            border: 1px solid #F5E6B3;
-            border-radius: 8px;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex: none;
-            font-size: 16px;
-        }
-
-        .btn-icon:hover {
-            background: rgba(11, 12, 26, 0.8);
-            border-color: #F5E6B3;
-            box-shadow: 0 4px 15px rgba(245, 230, 179, 0.3);
-            transform: scale(1.05);
-        }
-
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        #summary {
-            margin-top: 15px;
-            white-space: pre-wrap;
-            line-height: 1.6;
-            color: #F5E6B3;
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
+            box-shadow: 0 6px 20px rgba(245, 230, 179, .4);
         }
 
         .summary-container {
-            position: relative;
-            background: rgba(11, 12, 26, 0.8);
             border: 1px solid #F5E6B3;
             border-radius: 16px;
             padding: 20px;
-            margin-top: 15px;
-            box-shadow:
-                0 4px 20px rgba(245, 230, 179, 0.1),
-                inset 0 1px 0 rgba(245, 230, 179, 0.2);
-            min-height: 100px;
-            backdrop-filter: blur(10px);
-        }
-
-        .summary-container::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #F5E6B3, transparent, #F5E6B3, transparent);
-            border-radius: 18px;
-            z-index: -1;
-            opacity: 0.15;
+            margin-top: 12px;
         }
 
         .summary-header {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(245, 230, 179, 0.3);
-        }
-
-        .summary-header h3 {
-            margin: 0;
-            color: #F5E6B3;
-            font-size: 16px;
-            font-family: 'Cinzel Decorative', serif;
-            font-weight: 600;
-        }
-
-        .loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100px;
-            color: #F5E6B3;
-        }
-
-        .spinner {
-            width: 32px;
-            height: 32px;
-            border: 3px solid rgba(245, 230, 179, 0.3);
-            border-top: 3px solid #F5E6B3;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
             margin-bottom: 10px;
-            box-shadow: 0 0 10px rgba(245, 230, 179, 0.3);
         }
 
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        .status-message {
-            text-align: center;
-            font-size: 12px;
-            color: rgba(245, 230, 179, 0.8);
-            margin-top: 10px;
-            min-height: 16px;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .status-message.success {
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #F5E6B3;
+            border-radius: 8px;
+            background: rgba(11, 12, 26, .6);
             color: #F5E6B3;
-            text-shadow: 0 0 5px rgba(245, 230, 179, 0.5);
-        }
-
-        .status-message.error {
-            color: #ff6b6b;
-            text-shadow: 0 0 5px rgba(255, 107, 107, 0.3);
-        }
-
-        .bullet-points {
-            margin: 0;
-            padding-left: 20px;
-        }
-
-        .bullet-points li {
-            margin-bottom: 8px;
-            line-height: 1.5;
-            color: #F5E6B3;
-            position: relative;
-        }
-
-        .bullet-points li::marker {
-            content: '✦';
-            color: #F5E6B3;
-            font-size: 12px;
         }
 
         .hidden {
+            display: none !important;
+        }
+
+        #statusMessage {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 10px;
+            min-height: 16px;
+        }
+
+        /* Inputs used in login page */
+        .field {
+            display: grid;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-size: 13px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #F5E6B3;
+            background: rgba(11, 12, 26, .6);
+            color: #F5E6B3;
+            font-size: 14px;
+        }
+
+        #loginSavedMsg {
             display: none;
+            font-size: 13px;
+            color: #F5E6B3;
+            text-align: center;
         }
 
-        /* Additional celestial animations */
-        @keyframes starTwinkle {
-
-            0%,
-            100% {
-                opacity: 0.3;
-                transform: scale(1);
-            }
-
-            50% {
-                opacity: 1;
-                transform: scale(1.1);
-            }
+        #loginSave:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 230, 179, .4);
         }
 
-        .header h1::after {
-            content: ' ✦';
-            animation: starTwinkle 2s ease-in-out infinite;
-        }
-
-        /* Scrollbar styling for celestial theme */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(11, 12, 26, 0.3);
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(245, 230, 179, 0.6);
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(245, 230, 179, 0.8);
+        #loginSave {
+            padding: 10px;
+            border: 2px solid;
         }
 
         #autofill-confirmation-text {
             display: none;
             text-align: center;
             font-size: 15px;
-            color: #F5E6B3;
+        }
+
+        .section.autofillSection {
+            padding: 20px;
         }
     </style>
 </head>
 
 <body>
+    <!-- Drawer -->
+    <aside id="drawer" class="drawer" aria-hidden="true">
+        <h2>Navigate</h2>
+        <button class="nav-item" id="navHome">Home</button>
+        <button class="nav-item" id="navLogin">Autofill Info</button>
+    </aside>
+
     <div class="container">
+        <!-- Top bar with burger -->
+        <div class="topbar">
+            <button id="burgerBtn" class="burger" aria-label="Open menu"><span></span></button>
+            <div style="width:36px;height:36px;"></div> <!-- spacer for symmetry -->
+        </div>
+
         <div class="header">
             <h1>GovEase</h1>
             <p>Smart Webpage Summarizer</p>
         </div>
 
-        <div class="section">
-            <div class="button-group">
-                <button id="summarize" class="btn-primary">Summarize Page</button>
+        <!-- HOME VIEW -->
+        <section id="homeView">
+            <div class="section hover">
+                <div class="button-group">
+                    <button id="summarize" class="btn-primary">Summarize Page</button>
+                </div>
             </div>
-        </div>
 
-        <div id="summaryContainer" class="summary-container hidden">
-            <div class="summary-header">
-                <h3>Summary</h3>
-                <button id="playTts" class="btn-icon" title="Read aloud"></button>
+            <div id="summaryContainer" class="summary-container hidden">
+                <div class="summary-header">
+                    <h3>Summary</h3>
+                    <button id="playTts" class="btn-icon" style="cursor:pointer" title="Read aloud"></button>
+                </div>
+                <div id="summary" style="white-space: pre-line;"></div>
+                <div id="loading" class="hidden"
+                    style="display:flex;align-items:center;gap:10px;justify-content:center;margin-top:8px;">
+                    <div class="spinner"
+                        style="width:24px;height:24px;border:3px solid rgba(245,230,179,.3);border-top:3px solid #F5E6B3;border-radius:50%;animation:spin 1s linear infinite;">
+                    </div>
+                    <span>Summarizing...</span>
+                </div>
             </div>
-            <div id="summary"></div>
-            <div id="loading" class="loading hidden">
-                <div class="spinner"></div>
-                <span>Summarizing...</span>
-            </div>
-        </div>
-        <div id="section">
-            <div class="button-group">
-                <button id="autofill" class="btn-primary">Autofill</button>
-            </div>
-            <p id="autofill-confirmation-text">Done!</p>
-        </div>
 
-        <div id="statusMessage" class="status-message"></div>
+            <div class="section hover">
+                <div class="button-group">
+                    <button id="autofill" class="btn-primary">Autofill</button>
+                </div>
+                <p id="autofill-confirmation-text">Done!</p>
+
+            </div>
+            <div id="statusMessage" class="status-message"></div>
+        </section>
+
+        <!-- LOGIN VIEW -->
+        <section id="loginView" class="hidden" aria-hidden="true">
+            <div class="section autofillSection">
+                <h3 style="margin-top:0;font-family:'Cinzel Decorative',serif;">Autofill Info</h3>
+
+                <form id="loginForm" autocomplete="on">
+                    <div class="field">
+                        <label for="firstName">First Name</label>
+                        <input id="firstName" name="firstName" type="text" placeholder="John" />
+                    </div>
+
+                    <div class="field">
+                        <label for="lastName">Last Name</label>
+                        <input id="lastName" name="lastName" type="text" placeholder="Doe" />
+                    </div>
+
+                    <div class="field">
+                        <label for="emailAddress">Email Address</label>
+                        <input id="emailAddress" name="emailAddress" type="email" placeholder="example@email.com" />
+                    </div>
+
+                    <div class="field">
+                        <label for="city">City</label>
+                        <input id="city" name="city" type="text" placeholder="Austin" />
+                    </div>
+
+                    <div class="field">
+                        <label for="state">State</label>
+                        <input id="state" name="state" type="text" placeholder="Texas" />
+                    </div>
+
+                    <div class="field">
+                        <label for="streetAddress">Street Address</label>
+                        <input id="streetAddress" name="streetAddress" type="text" placeholder="2317 Speedway" />
+                    </div>
+
+                    <div class="button-group" style="margin-top:12px;">
+                        <button id="loginSave" class="btn-primary" type="submit">Save</button>
+                    </div>
+                </form>
+
+                <p id="loginSavedMsg" role="status" aria-live="polite">Credentials saved!</p>
+            </div>
+        </section>
     </div>
 
     <script src="popup.js"></script>

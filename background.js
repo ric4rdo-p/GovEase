@@ -18,7 +18,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 ${text}
 
-Format your response as bullet points using • symbol. Focus on the key points and main ideas. Do not add any type of markdown in the response, just plain text.`
+Format your response as bullet points using • symbol. Start each bullet point on a new line.
+ Focus on the key points and main ideas. Do not add any type of markdown in the response, just plain text.`
                 }]
             }]
         };
@@ -52,9 +53,9 @@ Format your response as bullet points using • symbol. Focus on the key points 
         const { text } = request;
 
         // Your hardcoded ElevenLabs API key - replace with your actual API key
-        const ELEVENLABS_API_KEY = 'ELEVENLABS_API_KEY_HERE'; // Replace this with your actual ElevenLabs API key
+        const ELEVENLABS_API_KEY = 'ELEVENLABS_API_KEY'; // Replace this with your actual ElevenLabs API key
 
-        const voiceId = 'CwhRBWXzGAHq8TQ4Fs17';
+        const voiceId = 'UgBBYS2sOqTuMpoF3BR0';
         const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`;
 
         const data = {

@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 target: { tabId: tabs[0].id },
                 func: () => {
                     const arr = ["Ricardo", "Pena", "example@email.com", "2317 Speedway", "", "Austin",
-                        "Texas", "78640"
+                        "Texas", "78712"
                     ];
                     let index = 0;
                     document.querySelectorAll("input:not([type='hidden'])").forEach(el => {
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
             },
                 () => {
                     document.getElementById("autofill-confirmation-text").style.display = "block";
-                    setTimeout(() => { document.getElementById("autofill-confirmation-text").style.display = "none"; }, 10000)
+                    setTimeout(() => { document.getElementById("autofill-confirmation-text").style.display = "none"; }, 5000)
                 });
         });
 
@@ -241,5 +241,49 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isPlaying) {
             stopSpeaking();
         }
+    });
+
+    // Drawer + navigation
+    const drawer = document.getElementById("drawer");
+    const burgerBtn = document.getElementById("burgerBtn");
+    const navHome = document.getElementById("navHome");
+    const navLogin = document.getElementById("navLogin");
+
+    const homeView = document.getElementById("homeView");
+    const loginView = document.getElementById("loginView");
+
+    function openDrawer() {
+        drawer.classList.add("open");
+        drawer.setAttribute("aria-hidden", "false");
+    }
+    function closeDrawer() {
+        drawer.classList.remove("open");
+        drawer.setAttribute("aria-hidden", "true");
+    }
+    burgerBtn.addEventListener("click", () => {
+        const isOpen = drawer.classList.contains("open");
+        isOpen ? closeDrawer() : openDrawer();
+    });
+
+    function showHome() {
+        homeView.classList.remove("hidden");
+        homeView.setAttribute("aria-hidden", "false");
+        loginView.classList.add("hidden");
+        loginView.setAttribute("aria-hidden", "true");
+        closeDrawer();
+    }
+    function showLogin() {
+        homeView.classList.add("hidden");
+        homeView.setAttribute("aria-hidden", "true");
+        loginView.classList.remove("hidden");
+        loginView.setAttribute("aria-hidden", "false");
+        closeDrawer();
+    }
+    navHome.addEventListener("click", showHome);
+    navLogin.addEventListener("click", showLogin);
+
+    loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        loginSavedMsg.style.display = "block";
     });
 });
