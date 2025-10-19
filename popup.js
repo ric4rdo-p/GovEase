@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const summarizeButton = document.getElementById('summarize');
+    const autofillButton = document.getElementById("autofill");
     const summaryDiv = document.getElementById('summary');
     const summaryContainer = document.getElementById('summaryContainer');
     const loadingDiv = document.getElementById('loading');
@@ -134,6 +135,32 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     });
+
+    autofillButton.addEventListener("click", () => {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            const activeTab = tabs[0];
+            chrome.scripting.executeScript({
+                target: { tabId: tabs[0].id },
+                func: () => {
+                    const arr = ["Ricardo", "Pena", "example@email.com", "2317 Speedway", "", "Austin",
+                        "Texas", "78640"
+                    ];
+                    let index = 0;
+                    document.querySelectorAll("input:not([type='hidden'])").forEach(el => {
+                        el.value = arr[index] || "";
+                        index++;
+                    });
+                }
+
+            },
+                () => {
+                    document.getElementById("autofill-confirmation-text").style.display = "block";
+                    setTimeout(() => { document.getElementById("autofill-confirmation-text").style.display = "none"; }, 10000)
+                });
+        });
+
+    });
+
 
     // Listen for messages from background script
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
